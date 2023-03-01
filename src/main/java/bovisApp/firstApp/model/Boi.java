@@ -1,9 +1,6 @@
 package bovisApp.firstApp.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table
@@ -13,23 +10,23 @@ public class Boi {
     private Long id;
     private int numero;
     private double peso;
-    private String remedio;
-    private String raca;
+    @OneToOne
+    private Raca raca;
 
+    @ManyToOne
+    private Lote lote;
     public Boi(){ }
 
-    public Boi(Long id, int numero, double peso, String remedio, String raca) {
+    public Boi(Long id, int numero, double peso, Raca raca) {
         this.id = id;
         this.numero = numero;
         this.peso = peso;
-        this.remedio = remedio;
         this.raca = raca;
     }
 
-    public Boi(int numero, double peso, String remedio, String raca) {
+    public Boi(int numero, double peso, Raca raca) {
         this.numero = numero;
         this.peso = peso;
-        this.remedio = remedio;
         this.raca = raca;
     }
 
@@ -57,19 +54,11 @@ public class Boi {
         this.peso = peso;
     }
 
-    public String getRemedio() {
-        return remedio;
-    }
-
-    public void setRemedio(String remedio) {
-        this.remedio = remedio;
-    }
-
-    public String getRaca() {
+    public Raca getRaca() {
         return raca;
     }
 
-    public void setRaca(String raca) {
+    public void setRaca(Raca raca) {
         this.raca = raca;
     }
 
@@ -79,7 +68,6 @@ public class Boi {
                 "id=" + id +
                 ", numero=" + numero +
                 ", peso=" + peso +
-                ", remedio='" + remedio + '\'' +
                 ", raca='" + raca + '\'' +
                 '}';
     }

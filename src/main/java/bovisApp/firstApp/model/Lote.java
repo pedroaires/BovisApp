@@ -1,8 +1,9 @@
 package bovisApp.firstApp.model;
 
+import bovisApp.firstApp.model.enumeration.Estado;
+
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table
@@ -12,27 +13,15 @@ public class Lote {
     private Long id;
     private Date dataCompra;
     private Date dataVenda;
-    @OneToMany
-    private List<Boi> bois;
-    private double precoTotal;
-    private double pesoInicialTotal;
+
+    private Estado estado;
 
     public Lote() {
     }
 
-    public Lote(Date dataCompra, Date dataVenda, List<Boi> bois, double precoTotal, double pesoInicialTotal) {
+    public Lote(Date dataCompra, Estado estado) {
         this.dataCompra = dataCompra;
-        this.dataVenda = dataVenda;
-        this.bois = bois;
-        this.precoTotal = precoTotal;
-        this.pesoInicialTotal = pesoInicialTotal;
-    }
-
-    public Lote(Date dataCompra, List<Boi> bois, double precoTotal, double pesoInicialTotal) {
-        this.dataCompra = dataCompra;
-        this.bois = bois;
-        this.precoTotal = precoTotal;
-        this.pesoInicialTotal = pesoInicialTotal;
+        this.estado = estado;
     }
 
     public Date getDataCompra() {
@@ -51,27 +40,11 @@ public class Lote {
         this.dataVenda = dataVenda;
     }
 
-    public List<Boi> getBois() {
-        return bois;
+    public Estado getEstado() {
+        return estado;
     }
 
-    public void setBois(List<Boi> bois) {
-        this.bois = bois;
-    }
-
-    public double getPrecoTotal() {
-        return precoTotal;
-    }
-
-    public void setPrecoTotal(double precoTotal) {
-        this.precoTotal = precoTotal;
-    }
-
-    public double getPesoInicialTotal() {
-        return pesoInicialTotal;
-    }
-
-    public void setPesoInicialTotal(double pesoInicialTotal) {
-        this.pesoInicialTotal = pesoInicialTotal;
+    public void setEstado(Estado estado) {
+        this.estado = estado;
     }
 }
