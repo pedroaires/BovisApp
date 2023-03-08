@@ -1,6 +1,10 @@
 package bovisApp.firstApp.model;
 
+import bovisApp.firstApp.model.enumeration.EstadoBoi;
+
 import javax.persistence.*;
+import java.util.Date;
+import java.util.Map;
 
 @Entity
 @Table
@@ -9,24 +13,27 @@ public class Boi {
     @GeneratedValue
     private Long id;
     private int numero;
-    private double peso;
+
+    @ManyToMany
+    private Map<Date, Pesagem> pesagens;
+
     @OneToOne
     private Raca raca;
 
     @ManyToOne
     private Lote lote;
+
+    private EstadoBoi estadoBoi;
     public Boi(){ }
 
-    public Boi(Long id, int numero, double peso, Raca raca) {
+    public Boi(Long id, int numero, Raca raca) {
         this.id = id;
         this.numero = numero;
-        this.peso = peso;
         this.raca = raca;
     }
 
-    public Boi(int numero, double peso, Raca raca) {
+    public Boi(int numero, Raca raca) {
         this.numero = numero;
-        this.peso = peso;
         this.raca = raca;
     }
 
@@ -46,14 +53,6 @@ public class Boi {
         this.numero = numero;
     }
 
-    public double getPeso() {
-        return peso;
-    }
-
-    public void setPeso(double peso) {
-        this.peso = peso;
-    }
-
     public Raca getRaca() {
         return raca;
     }
@@ -67,7 +66,6 @@ public class Boi {
         return "Boi{" +
                 "id=" + id +
                 ", numero=" + numero +
-                ", peso=" + peso +
                 ", raca='" + raca + '\'' +
                 '}';
     }

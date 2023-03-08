@@ -30,25 +30,21 @@ public class AppConfiguration {
 
             Boi boi1 = new Boi(
                     1,
-                    120,
                     nelore
             );
 
             Boi boi2 = new Boi(
                     2,
-                    250,
                     nelore
             );
 
             Boi boi3 = new Boi(
                     3,
-                    300,
                     angus
             );
 
             Boi boi4 = new Boi(
                     4,
-                    400,
                     nelore
             );
 

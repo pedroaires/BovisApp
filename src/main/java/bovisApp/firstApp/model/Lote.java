@@ -1,6 +1,6 @@
 package bovisApp.firstApp.model;
 
-import bovisApp.firstApp.model.enumeration.Estado;
+import bovisApp.firstApp.model.enumeration.EstadoLote;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -14,14 +14,14 @@ public class Lote {
     private Date dataCompra;
     private Date dataVenda;
 
-    private Estado estado;
+    private EstadoLote estadoLote;
 
     public Lote() {
     }
 
-    public Lote(Date dataCompra, Estado estado) {
+    public Lote(Date dataCompra, EstadoLote estadoLote) {
         this.dataCompra = dataCompra;
-        this.estado = estado;
+        this.estadoLote = estadoLote;
     }
 
     public Date getDataCompra() {
@@ -40,11 +40,11 @@ public class Lote {
         this.dataVenda = dataVenda;
     }
 
-    public Estado getEstado() {
-        return estado;
+    public EstadoLote getEstado() {
+        return estadoLote;
     }
 
-    public void setEstado(Estado estado) {
-        this.estado = estado;
+    public void setEstado(EstadoLote estadoLote) {
+        this.estadoLote = estadoLote;
     }
 }
