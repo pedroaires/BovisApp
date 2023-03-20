@@ -24,17 +24,22 @@ public class Boi {
     private Lote lote;
 
     private EstadoBoi estadoBoi;
-    public Boi(){ }
-
-    public Boi(Long id, int numero, Raca raca) {
-        this.id = id;
-        this.numero = numero;
-        this.raca = raca;
-    }
+    public Boi(int numero, String raca){ }
 
     public Boi(int numero, Raca raca) {
         this.numero = numero;
         this.raca = raca;
+    }
+
+    public Boi(int numero, Raca raca, Lote lote, EstadoBoi estadoBoi) {
+        this.numero = numero;
+        this.raca = raca;
+        this.lote = lote;
+        this.estadoBoi = estadoBoi;
+    }
+
+    public Boi() {
+
     }
 
     public Long getId() {
@@ -59,6 +64,30 @@ public class Boi {
 
     public void setRaca(Raca raca) {
         this.raca = raca;
+    }
+
+    public Map<Date, Pesagem> getPesagens() {
+        return pesagens;
+    }
+
+    public void setPesagens(Map<Date, Pesagem> pesagens) {
+        this.pesagens = pesagens;
+    }
+
+    public Lote getLote() {
+        return lote;
+    }
+
+    public void setLote(Lote lote) {
+        this.lote = lote;
+    }
+
+    public EstadoBoi getEstadoBoi() {
+        return estadoBoi;
+    }
+
+    public void setEstadoBoi(EstadoBoi estadoBoi) {
+        this.estadoBoi = estadoBoi;
     }
 
     @Override

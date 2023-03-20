@@ -1,11 +1,13 @@
 package bovisApp.firstApp.controller;
 
+import bovisApp.firstApp.DTO.boi.BoiRequestDTO;
+import bovisApp.firstApp.DTO.boi.BoiResponseDTO;
 import bovisApp.firstApp.model.Boi;
 import bovisApp.firstApp.service.BoiService;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,9 +21,17 @@ public class BoiApiController {
         this.boiService = boiService;
     }
 
-    @GetMapping
+    @GetMapping(value = "/listBois")
+    @ResponseStatus(HttpStatus.OK)
     public List<Boi> getBoi(){
         return boiService.getBois();
+    }
+
+    @PostMapping(value = "/cadastraBoi")
+    @ResponseStatus(HttpStatus.CREATED)
+    public BoiResponseDTO cadastrarBoi(@RequestBody BoiRequestDTO boiRequestDTO){
+        BoiResponseDTO boiResponseDTO = boiService.cadastraBoi(boiRequestDTO);
+        return boiResponseDTO;
     }
 
 }

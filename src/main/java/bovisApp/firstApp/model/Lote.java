@@ -24,6 +24,14 @@ public class Lote {
         this.estadoLote = estadoLote;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Date getDataCompra() {
         return dataCompra;
     }
