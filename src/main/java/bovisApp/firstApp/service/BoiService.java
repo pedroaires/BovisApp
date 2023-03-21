@@ -8,7 +8,7 @@ import bovisApp.firstApp.model.Boi;
 import java.util.List;
 
 public interface BoiService {
-    List<Boi> getBois();
+    List<BoiResponseDTO> getBois();
 
     BoiResponseDTO cadastraBoi(BoiRequestDTO boiRequestDTO);
 }

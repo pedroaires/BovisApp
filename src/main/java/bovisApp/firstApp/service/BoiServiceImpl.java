@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,8 +34,12 @@ public class BoiServiceImpl implements BoiService {
     }
 
     @Override
-    public List<Boi> getBois() {
-        return boiRepository.findAll();
+    public List<BoiResponseDTO> getBois() {
+        List<BoiResponseDTO> responseList = new ArrayList<>();
+        for(Boi boi : boiRepository.findAll()){
+            responseList.add(new BoiResponseDTO(boi));
+        }
+        return responseList;
     }
 
     @Override
@@ -71,10 +76,11 @@ public class BoiServiceImpl implements BoiService {
     }
 
     private Lote getLoteById(Long id){
+
         if(id == null){
-            //TODO: after implementation of Lote controller, this snippet must be changed
-            return null;
-            //throw new EntityNotFoundException("O lote nao pode ser nulo");
+            Lote lote = new Lote();
+            loteRepository.save(lote);
+            return lote;
         }
         Optional<Lote> loteOp = loteRepository.findById(id);
         return loteOp.orElseThrow(() -> new EntityNotFoundException("Lote não encontrado"));

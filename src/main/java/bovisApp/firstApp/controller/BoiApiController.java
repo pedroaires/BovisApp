@@ -23,7 +23,7 @@ public class BoiApiController {
 
     @GetMapping(value = "/listBois")
     @ResponseStatus(HttpStatus.OK)
-    public List<Boi> getBoi(){
+    public List<BoiResponseDTO> getBoi(){
         return boiService.getBois();
     }
 
