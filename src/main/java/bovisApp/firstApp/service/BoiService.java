@@ -11,4 +11,6 @@ public interface BoiService {
     List<BoiResponseDTO> getBois();
 
     BoiResponseDTO cadastraBoi(BoiRequestDTO boiRequestDTO);
+
+    BoiResponseDTO editaBoi(BoiRequestDTO boiRequestDTO, Long boiId);
 }

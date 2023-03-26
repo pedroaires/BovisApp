@@ -2,7 +2,6 @@ package bovisApp.firstApp.controller;
 
 import bovisApp.firstApp.DTO.boi.BoiRequestDTO;
 import bovisApp.firstApp.DTO.boi.BoiResponseDTO;
-import bovisApp.firstApp.model.Boi;
 import bovisApp.firstApp.service.BoiService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +30,13 @@ public class BoiApiController {
     @ResponseStatus(HttpStatus.CREATED)
     public BoiResponseDTO cadastrarBoi(@RequestBody BoiRequestDTO boiRequestDTO){
         BoiResponseDTO boiResponseDTO = boiService.cadastraBoi(boiRequestDTO);
+        return boiResponseDTO;
+    }
+
+    @PostMapping(value = "/editaBoi")
+    @ResponseStatus(HttpStatus.OK)
+    public BoiResponseDTO editaBoi(@RequestBody BoiRequestDTO boiRequestDTO, @RequestParam Long boiId){
+        BoiResponseDTO boiResponseDTO = boiService.editaBoi(boiRequestDTO, boiId);
         return boiResponseDTO;
     }
 

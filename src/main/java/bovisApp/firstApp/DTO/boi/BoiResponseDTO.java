@@ -3,6 +3,8 @@ package bovisApp.firstApp.DTO.boi;
 import bovisApp.firstApp.model.Boi;
 
 public class BoiResponseDTO {
+
+    private Long id;
     private int numero;
 
     private Long loteId;
@@ -14,6 +16,15 @@ public class BoiResponseDTO {
         this.loteId = boi.getLote().getId();
         this.estadoBoi = boi.getEstadoBoi().toString();
         this.raca = boi.getRaca().getNome();
+        this.id = boi.getId();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public int getNumero() {

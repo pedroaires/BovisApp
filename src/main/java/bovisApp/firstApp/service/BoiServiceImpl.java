@@ -56,6 +56,17 @@ public class BoiServiceImpl implements BoiService {
         return new BoiResponseDTO(boi);
     }
 
+    @Override
+    public BoiResponseDTO editaBoi(BoiRequestDTO boiRequestDTO, Long id){
+        Boi boi = boiRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        boi.setNumero(boiRequestDTO.getNumero());
+        boi.setRaca(getRacaByNome(normalizaRaca(boiRequestDTO.getRaca())));
+        boi.setLote(getLoteById(boiRequestDTO.getLoteId()));
+        boi.setEstadoBoi(EstadoBoi.getEstadoBoi(boiRequestDTO.getEstadoBoi()));
+        boiRepository.save(boi);
+        return new BoiResponseDTO(boi);
+    }
+
     private String normalizaRaca(String raca){
         //TODO
         return raca;
