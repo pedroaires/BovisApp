@@ -20,17 +20,14 @@ import java.util.Optional;
 @Service
 public class BoiServiceImpl implements BoiService {
     private final BoiRepository boiRepository;
-
-    private final RacaRepository racaRepository;
-
     private final LoteRepository loteRepository;
-
+    private final RacaService racaService;
 
     @Autowired
-    public BoiServiceImpl(BoiRepository boiRepository, RacaRepository racaRepository, LoteRepository loteRepository) {
+    public BoiServiceImpl(BoiRepository boiRepository, LoteRepository loteRepository, RacaService racaService) {
         this.boiRepository = boiRepository;
-        this.racaRepository = racaRepository;
         this.loteRepository = loteRepository;
+        this.racaService = racaService;
     }
 
     @Override
@@ -44,7 +41,7 @@ public class BoiServiceImpl implements BoiService {
 
     @Override
     public BoiResponseDTO cadastraBoi(BoiRequestDTO boiRequestDTO){
-        Raca raca = getRacaByNome(normalizaRaca(boiRequestDTO.getRaca()));
+        Raca raca = racaService.getRacaByNome(boiRequestDTO.getRaca());
         Lote lote = getLoteById(boiRequestDTO.getLoteId());
         Boi boi = new Boi(
                 boiRequestDTO.getNumero(),
@@ -60,30 +57,11 @@ public class BoiServiceImpl implements BoiService {
     public BoiResponseDTO editaBoi(BoiRequestDTO boiRequestDTO, Long id){
         Boi boi = boiRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         boi.setNumero(boiRequestDTO.getNumero());
-        boi.setRaca(getRacaByNome(normalizaRaca(boiRequestDTO.getRaca())));
+        boi.setRaca(racaService.getRacaByNome(boiRequestDTO.getRaca()));
         boi.setLote(getLoteById(boiRequestDTO.getLoteId()));
         boi.setEstadoBoi(EstadoBoi.getEstadoBoi(boiRequestDTO.getEstadoBoi()));
         boiRepository.save(boi);
         return new BoiResponseDTO(boi);
-    }
-
-    private String normalizaRaca(String raca){
-        //TODO
-        return raca;
-    }
-
-    // Se a raça não existir, cria uma nova
-    private Raca getRacaByNome(String racaStr){
-        Optional<Raca> racaOp = racaRepository.findByNome(racaStr);
-        Raca raca;
-        if(racaOp.isPresent()){
-            raca = racaOp.get();
-        }
-        else{
-            raca = new Raca(racaStr);
-            racaRepository.save(raca);
-        }
-        return raca;
     }
 
     private Lote getLoteById(Long id){
