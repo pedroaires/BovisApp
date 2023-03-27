@@ -13,4 +13,6 @@ public interface BoiService {
     BoiResponseDTO cadastraBoi(BoiRequestDTO boiRequestDTO);
 
     BoiResponseDTO editaBoi(BoiRequestDTO boiRequestDTO, Long boiId);
+
+    BoiResponseDTO deleteBoi(Long id);
 }

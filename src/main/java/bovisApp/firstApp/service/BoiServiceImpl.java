@@ -7,15 +7,12 @@ import bovisApp.firstApp.model.Lote;
 import bovisApp.firstApp.model.Raca;
 import bovisApp.firstApp.model.enumeration.EstadoBoi;
 import bovisApp.firstApp.repository.BoiRepository;
-import bovisApp.firstApp.repository.LoteRepository;
-import bovisApp.firstApp.repository.RacaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BoiServiceImpl implements BoiService {
@@ -61,6 +58,13 @@ public class BoiServiceImpl implements BoiService {
         boi.setLote(loteService.getLoteById(boiRequestDTO.getLoteId()));
         boi.setEstadoBoi(EstadoBoi.getEstadoBoi(boiRequestDTO.getEstadoBoi()));
         boiRepository.save(boi);
+        return new BoiResponseDTO(boi);
+    }
+
+    @Override
+    public BoiResponseDTO deleteBoi(Long id){
+        Boi boi = boiRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        boiRepository.delete(boi);
         return new BoiResponseDTO(boi);
     }
 

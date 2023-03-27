@@ -40,4 +40,11 @@ public class BoiApiController {
         return boiResponseDTO;
     }
 
+    @DeleteMapping(value = "/deletaBoi")
+    @ResponseStatus(HttpStatus.OK)
+    public BoiResponseDTO deletaBoi(@RequestParam Long id){
+        BoiResponseDTO boiResponseDTO = boiService.deleteBoi(id);
+        return boiResponseDTO;
+    }
+
 }

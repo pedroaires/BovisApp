@@ -29,5 +29,4 @@ public class LoteServiceImpl implements  LoteService{
         return loteOp.orElseThrow(() -> new EntityNotFoundException("Lote não encontrado"));
     }
 
-
 }
