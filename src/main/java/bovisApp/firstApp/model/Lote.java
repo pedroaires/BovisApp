@@ -13,7 +13,7 @@ public class Lote {
     private Long id;
     private Date dataCompra;
     private Date dataVenda;
-
+    private String descricao;
     private EstadoLote estadoLote;
 
     public Lote() {
@@ -24,12 +24,26 @@ public class Lote {
         this.estadoLote = estadoLote;
     }
 
+    public Lote(Date dataCompra, EstadoLote estadoLote, String descricao) {
+        this.dataCompra = dataCompra;
+        this.estadoLote = estadoLote;
+        this.descricao = descricao;
+    }
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
     public Date getDataCompra() {
