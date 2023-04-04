@@ -38,13 +38,18 @@ public class BoiServiceImpl implements BoiService {
 
     @Override
     public BoiResponseDTO cadastraBoi(BoiRequestDTO boiRequestDTO){
+        if(boiRequestDTO.getEstadoBoi().isEmpty() ||
+                boiRequestDTO.getNumero() == null){
+            throw new IllegalArgumentException("Estado do boi e numero nao podem ser vazios");
+        }
         Raca raca = racaService.getRacaByNome(boiRequestDTO.getRaca());
         Lote lote = loteService.getLoteById(boiRequestDTO.getLoteId());
+        EstadoBoi estadoBoi = EstadoBoi.getEstadoBoi(boiRequestDTO.getEstadoBoi());
         Boi boi = new Boi(
                 boiRequestDTO.getNumero(),
                 raca,
                 lote,
-                EstadoBoi.getEstadoBoi(boiRequestDTO.getEstadoBoi())
+                estadoBoi
         );
         boiRepository.save(boi);
         return new BoiResponseDTO(boi);

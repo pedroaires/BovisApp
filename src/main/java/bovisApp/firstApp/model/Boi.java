@@ -5,6 +5,7 @@ import bovisApp.firstApp.model.enumeration.EstadoBoi;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 
 @Entity
 @Table
@@ -84,6 +85,19 @@ public class Boi {
 
     public void setEstadoBoi(EstadoBoi estadoBoi) {
         this.estadoBoi = estadoBoi;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Boi boi = (Boi) o;
+        return numero == boi.numero && Objects.equals(id, boi.id) && Objects.equals(pesagens, boi.pesagens) && Objects.equals(raca, boi.raca) && Objects.equals(lote, boi.lote) && estadoBoi == boi.estadoBoi;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, numero, pesagens, raca, lote, estadoBoi);
     }
 
     @Override

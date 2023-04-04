@@ -2,6 +2,8 @@ package bovisApp.firstApp.DTO.boi;
 
 import bovisApp.firstApp.model.Boi;
 
+import java.util.Objects;
+
 public class BoiResponseDTO {
 
     private Long id;
@@ -57,5 +59,18 @@ public class BoiResponseDTO {
 
     public void setRaca(String raca) {
         this.raca = raca;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BoiResponseDTO that = (BoiResponseDTO) o;
+        return numero == that.numero && Objects.equals(id, that.id) && Objects.equals(loteId, that.loteId) && Objects.equals(estadoBoi, that.estadoBoi) && Objects.equals(raca, that.raca);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, numero, loteId, estadoBoi, raca);
     }
 }
