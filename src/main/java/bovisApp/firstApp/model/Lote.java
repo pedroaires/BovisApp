@@ -4,6 +4,7 @@ import bovisApp.firstApp.model.enumeration.EstadoLote;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table
@@ -68,5 +69,18 @@ public class Lote {
 
     public void setEstado(EstadoLote estadoLote) {
         this.estadoLote = estadoLote;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Lote lote = (Lote) o;
+        return id.equals(lote.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

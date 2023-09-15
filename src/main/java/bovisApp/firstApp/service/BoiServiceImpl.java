@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BoiServiceImpl implements BoiService {
@@ -37,16 +38,15 @@ public class BoiServiceImpl implements BoiService {
     }
 
     @Override
-    public BoiResponseDTO cadastraBoi(BoiRequestDTO boiRequestDTO){
-        if(boiRequestDTO.getEstadoBoi().isEmpty() ||
-                boiRequestDTO.getNumero() == null){
-            throw new IllegalArgumentException("Estado do boi e numero nao podem ser vazios");
-        }
+    public BoiResponseDTO cadastraBoi(BoiRequestDTO boiRequestDTO) throws IllegalArgumentException{
+        Integer numero = Optional.ofNullable(boiRequestDTO.getNumero()).orElseThrow(
+                () -> new IllegalArgumentException("Estado do boi e numero nao podem ser vazios")
+        );
+        EstadoBoi estadoBoi = EstadoBoi.getEstadoBoi(boiRequestDTO.getEstadoBoi());
         Raca raca = racaService.getRacaByNome(boiRequestDTO.getRaca());
         Lote lote = loteService.getLoteById(boiRequestDTO.getLoteId());
-        EstadoBoi estadoBoi = EstadoBoi.getEstadoBoi(boiRequestDTO.getEstadoBoi());
         Boi boi = new Boi(
-                boiRequestDTO.getNumero(),
+                numero,
                 raca,
                 lote,
                 estadoBoi
