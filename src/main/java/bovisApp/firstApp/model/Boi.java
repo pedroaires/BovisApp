@@ -13,7 +13,7 @@ public class Boi {
     @Id
     @GeneratedValue
     private Long id;
-    private int numero;
+    private Integer numero;
 
     @ManyToMany
     private Map<Date, Pesagem> pesagens;
@@ -92,7 +92,7 @@ public class Boi {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Boi boi = (Boi) o;
-        return numero == boi.numero && Objects.equals(id, boi.id) && Objects.equals(pesagens, boi.pesagens) && Objects.equals(raca, boi.raca) && Objects.equals(lote, boi.lote) && estadoBoi == boi.estadoBoi;
+        return numero == boi.getNumero() && Objects.equals(id, boi.getId()) && Objects.equals(pesagens, boi.getPesagens()) && Objects.equals(raca, boi.getRaca()) && Objects.equals(lote, boi.lote) && estadoBoi == boi.getEstadoBoi();
     }
 
     @Override

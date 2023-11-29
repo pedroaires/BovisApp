@@ -2,6 +2,8 @@ package bovisApp.firstApp.service;
 
 import bovisApp.firstApp.DTO.boi.BoiRequestDTO;
 import bovisApp.firstApp.DTO.boi.BoiResponseDTO;
+import bovisApp.firstApp.exception.BoiExistsException;
+import bovisApp.firstApp.exception.BoiNotFoundException;
 import bovisApp.firstApp.model.Boi;
 import bovisApp.firstApp.model.Lote;
 import bovisApp.firstApp.model.Raca;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,11 +43,17 @@ public class BoiServiceImpl implements BoiService {
     @Override
     public BoiResponseDTO cadastraBoi(BoiRequestDTO boiRequestDTO) throws IllegalArgumentException{
         Integer numero = Optional.ofNullable(boiRequestDTO.getNumero()).orElseThrow(
-                () -> new IllegalArgumentException("Estado do boi e numero nao podem ser vazios")
+                () -> new IllegalArgumentException("Numero do boi não pode ser vazio")
         );
-        EstadoBoi estadoBoi = EstadoBoi.getEstadoBoi(boiRequestDTO.getEstadoBoi());
+        String estadoStr = Optional.ofNullable(boiRequestDTO.getEstadoBoi()).orElseThrow(
+                () -> new IllegalArgumentException("Estado do boi não pode ser vazio")
+        );
+        EstadoBoi estadoBoi = EstadoBoi.getEstadoBoi(estadoStr);
         Raca raca = racaService.getRacaByNome(boiRequestDTO.getRaca());
         Lote lote = loteService.getLoteById(boiRequestDTO.getLoteId());
+        if (boiRepository.existsByLoteAndNumero(lote, numero)){
+            throw new BoiExistsException(boiRequestDTO.getLoteId(), numero);
+        }
         Boi boi = new Boi(
                 numero,
                 raca,
@@ -57,11 +66,25 @@ public class BoiServiceImpl implements BoiService {
 
     @Override
     public BoiResponseDTO editaBoi(BoiRequestDTO boiRequestDTO, Long id){
-        Boi boi = boiRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        boi.setNumero(boiRequestDTO.getNumero());
-        boi.setRaca(racaService.getRacaByNome(boiRequestDTO.getRaca()));
-        boi.setLote(loteService.getLoteById(boiRequestDTO.getLoteId()));
-        boi.setEstadoBoi(EstadoBoi.getEstadoBoi(boiRequestDTO.getEstadoBoi()));
+        Boi boi = boiRepository.findById(id).orElseThrow(() -> new BoiNotFoundException(id));
+
+        Long loteId = boiRequestDTO.getLoteId();
+        Integer numero = Optional.ofNullable(boiRequestDTO.getNumero()).orElseThrow(
+                () -> new IllegalArgumentException("Numero do boi não pode ser vazio")
+        );
+        String estadoStr = Optional.ofNullable(boiRequestDTO.getEstadoBoi()).orElseThrow(
+                () -> new IllegalArgumentException("Estado do boi não pode ser vazio")
+        );
+        String racaStr = boiRequestDTO.getRaca();
+
+        Lote lote = loteService.getLoteById(loteId);
+        if (boiRepository.existsByLoteAndNumero(lote, numero)){
+            throw new BoiExistsException(boiRequestDTO.getLoteId(), numero);
+        }
+        boi.setNumero(numero);
+        boi.setRaca(racaService.getRacaByNome(racaStr));
+        boi.setLote(lote);
+        boi.setEstadoBoi(EstadoBoi.getEstadoBoi(estadoStr));
         boiRepository.save(boi);
         return new BoiResponseDTO(boi);
     }

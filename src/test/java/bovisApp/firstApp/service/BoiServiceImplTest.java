@@ -2,6 +2,7 @@ package bovisApp.firstApp.service;
 
 import bovisApp.firstApp.DTO.boi.BoiRequestDTO;
 import bovisApp.firstApp.DTO.boi.BoiResponseDTO;
+import bovisApp.firstApp.exception.BoiExistsException;
 import bovisApp.firstApp.model.Boi;
 import bovisApp.firstApp.model.Lote;
 import bovisApp.firstApp.model.Raca;
@@ -46,80 +47,228 @@ class BoiServiceImplTest {
 
         verify(boiRepository).findAll();
     }
+    @Test
+    void deveCadastrarBoi() {
+        Long loteId = 1L;
+        String racaStr = "Angus";
+        String estadoBoiStr = "na_fazenda";
+        Integer numeroBoi = 123;
 
+        BoiRequestDTO boiRequestDTO = new BoiRequestDTO(
+                numeroBoi,
+                racaStr,
+                loteId,
+                estadoBoiStr
+        );
+
+        EstadoBoi estadoBoi = EstadoBoi.getEstadoBoi(estadoBoiStr);
+
+        Raca raca = new Raca(racaStr);
+        when(racaService.getRacaByNome(racaStr)).thenReturn(raca);
+
+        Lote lote = new Lote();
+        when(loteService.getLoteById(loteId)).thenReturn(lote);
+
+        BoiResponseDTO response = boiService_underTest.cadastraBoi(boiRequestDTO);
+        Boi expectedBoi = new Boi(
+                boiRequestDTO.getNumero(),
+                raca,
+                lote,
+                estadoBoi
+        );
+
+        ArgumentCaptor<Boi> boiArgumentCaptor = ArgumentCaptor.forClass(Boi.class);
+        verify(boiRepository).save(boiArgumentCaptor.capture());
+        verify(loteService).getLoteById(loteId);
+        verify(racaService).getRacaByNome(racaStr);
+
+        assertThat(boiArgumentCaptor.getValue()).isEqualTo(expectedBoi);
+        assertThat(response).isEqualTo(new BoiResponseDTO(expectedBoi));
+    }
     @Test
     void deveCadastrarBoiLoteNulo() {
-        BoiRequestDTO boiRequestDTO = new BoiRequestDTO();
-        boiRequestDTO.setNumero(123);
-        boiRequestDTO.setRaca("Angus");
-        boiRequestDTO.setLoteId(null);
-
+        Long loteId = null;
+        String racaStr = "Angus";
         String estadoBoiStr = "na_fazenda";
-        boiRequestDTO.setEstadoBoi(estadoBoiStr);
+        Integer numeroBoi = 123;
+
+        BoiRequestDTO boiRequestDTO = new BoiRequestDTO(
+                numeroBoi,
+                racaStr,
+                loteId,
+                estadoBoiStr
+        );
+
         EstadoBoi estadoBoi = EstadoBoi.getEstadoBoi(estadoBoiStr);
 
-        Raca raca = new Raca("Angus");
-        when(racaService.getRacaByNome("Angus")).thenReturn(raca);
+        Raca raca = new Raca(racaStr);
+        when(racaService.getRacaByNome(racaStr)).thenReturn(raca);
 
         Lote lote = new Lote();
-        when(loteService.getLoteById(null)).thenReturn(lote);
+        when(loteService.getLoteById(loteId)).thenReturn(lote);
 
         BoiResponseDTO response = boiService_underTest.cadastraBoi(boiRequestDTO);
-
-        Boi boi = new Boi(
+        Boi expectedBoi = new Boi(
                 boiRequestDTO.getNumero(),
                 raca,
                 lote,
                 estadoBoi
         );
 
-        verify(loteService).getLoteById(null);
-        verify(racaService).getRacaByNome("Angus");
-
         ArgumentCaptor<Boi> boiArgumentCaptor = ArgumentCaptor.forClass(Boi.class);
         verify(boiRepository).save(boiArgumentCaptor.capture());
-        assertThat(boiArgumentCaptor.getValue()).isEqualTo(boi);
-        assertThat(response).isEqualTo(new BoiResponseDTO(boi));
+        verify(loteService).getLoteById(loteId);
+        verify(racaService).getRacaByNome(racaStr);
+
+        assertThat(boiArgumentCaptor.getValue()).isEqualTo(expectedBoi);
+        assertThat(response).isEqualTo(new BoiResponseDTO(expectedBoi));
     }
     @Test
-    void deveCadastrarBoiLoteNaoNulo() {
-        BoiRequestDTO boiRequestDTO = new BoiRequestDTO();
-        boiRequestDTO.setNumero(123);
-        boiRequestDTO.setRaca("Angus");
-        boiRequestDTO.setLoteId(1L);
-
+    void naoDeveCadastrarBoiNumeroNulo() {
+        Long loteId = 1L;
+        String racaStr = "Angus";
         String estadoBoiStr = "na_fazenda";
-        boiRequestDTO.setEstadoBoi(estadoBoiStr);
+        Integer numeroBoi = null;
+
+        BoiRequestDTO boiRequestDTO = new BoiRequestDTO(
+                numeroBoi,
+                racaStr,
+                loteId,
+                estadoBoiStr
+        );
+
+        String expectedMsgException = "Numero do boi não pode ser vazio";
+        assertThatThrownBy(() -> boiService_underTest.cadastraBoi(boiRequestDTO))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining(expectedMsgException);
+    }
+    @Test
+    void naoDeveCadastrarBoiEstadoNulo() {
+        Long loteId = 1L;
+        String racaStr = "Angus";
+        String estadoBoiStr = null;
+        Integer numeroBoi = 123;
+
+        BoiRequestDTO boiRequestDTO = new BoiRequestDTO(
+                numeroBoi,
+                racaStr,
+                loteId,
+                estadoBoiStr
+        );
+
+        String expectedMsgException = "Estado do boi não pode ser vazio";
+        assertThatThrownBy(() -> boiService_underTest.cadastraBoi(boiRequestDTO))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining(expectedMsgException);
+    }
+
+    @Test
+    void naoDeveCadastrarBoiEstadoInvalido() {
+        Long loteId = 1L;
+        String racaStr = "Angus";
+        String estadoBoiStr = "invalido";
+        Integer numeroBoi = 123;
+
+        BoiRequestDTO boiRequestDTO = new BoiRequestDTO(
+                numeroBoi,
+                racaStr,
+                loteId,
+                estadoBoiStr
+        );
+
+        String expectedMsgException = "Estado do boi inválido: " + estadoBoiStr;
+        assertThatThrownBy(() -> boiService_underTest.cadastraBoi(boiRequestDTO))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining(expectedMsgException);
+    }
+
+    @Test
+    void naoDeveCadastrarNumeroRepetidoMesmoLote() {
+        Long loteId = 1L;
+        String racaStr = "Angus";
+        String estadoBoiStr = "na_fazenda";
+        Integer numeroBoi = 123;
+
+        BoiRequestDTO boiRequestDTO = new BoiRequestDTO(
+                numeroBoi,
+                racaStr,
+                loteId,
+                estadoBoiStr
+        );
+
         EstadoBoi estadoBoi = EstadoBoi.getEstadoBoi(estadoBoiStr);
 
-        Raca raca = new Raca("Angus");
-        when(racaService.getRacaByNome("Angus")).thenReturn(raca);
+        Raca raca = new Raca(racaStr);
+        when(racaService.getRacaByNome(racaStr)).thenReturn(raca);
 
         Lote lote = new Lote();
-        lote.setId(1L);
-        when(loteService.getLoteById(1L)).thenReturn(lote);
+        when(loteService.getLoteById(loteId)).thenReturn(lote);
 
         BoiResponseDTO response = boiService_underTest.cadastraBoi(boiRequestDTO);
 
-        Boi boi = new Boi(
-                boiRequestDTO.getNumero(),
-                raca,
-                lote,
-                estadoBoi
-        );
+        when(boiRepository.existsByLoteAndNumero(lote, numeroBoi)).thenReturn(true);
+        assertThatThrownBy(() -> boiService_underTest.cadastraBoi(boiRequestDTO))
+                .isInstanceOf(BoiExistsException.class)
+                .hasMessageContaining("Boi com número: " + numeroBoi + " já existe no Lote de id: " + loteId);
 
-        verify(loteService).getLoteById(1L);
-        verify(racaService).getRacaByNome("Angus");
-
-        ArgumentCaptor<Boi> boiArgumentCaptor = ArgumentCaptor.forClass(Boi.class);
-        verify(boiRepository).save(boiArgumentCaptor.capture());
-        assertThat(boiArgumentCaptor.getValue()).isEqualTo(boi);
-        assertThat(response).isEqualTo(new BoiResponseDTO(boi));
     }
 
+
+
     @Test
-    @Disabled
     void editaBoi() {
+        Long boiId = 1L;
+        Long loteId = 1L;
+        String racaStr = "Angus";
+        String estadoBoiStr = "na_fazenda";
+        Integer numeroBoi = 123;
+
+        Long novoLoteId = 2L;
+        String novaRacaStr = "Nelore";
+        String novoEstadoBoiStr = "morto";
+        Integer novoNumeroBoi = 321;
+
+        BoiRequestDTO boiRequestDTO = new BoiRequestDTO(
+                novoNumeroBoi,
+                novaRacaStr,
+                novoLoteId,
+                novoEstadoBoiStr
+        );
+
+        Raca raca = new Raca(racaStr);
+        Raca novaRaca = new Raca(novaRacaStr);
+        when(racaService.getRacaByNome(novaRacaStr)).thenReturn(novaRaca);
+
+        Lote lote = new Lote();
+        Lote novoLote = new Lote();
+        when(loteService.getLoteById(novoLoteId)).thenReturn(novoLote);
+
+        Boi boi = new Boi(
+                numeroBoi,
+                raca,
+                lote,
+                EstadoBoi.getEstadoBoi(estadoBoiStr)
+        );
+        Boi expectedBoi = new Boi(
+                novoNumeroBoi,
+                novaRaca,
+                novoLote,
+                EstadoBoi.getEstadoBoi(novoEstadoBoiStr)
+        );
+
+        when(boiRepository.findById(boiId)).thenReturn(java.util.Optional.of(boi));
+
+        BoiResponseDTO response = boiService_underTest.editaBoi(boiRequestDTO, boiId);
+
+
+        ArgumentCaptor<Boi> boiArgumentCaptor = ArgumentCaptor.forClass(Boi.class);
+        verify(boiRepository).save(boiArgumentCaptor.capture());
+        verify(loteService).getLoteById(novoLoteId);
+        verify(racaService).getRacaByNome(novaRacaStr);
+
+        assertThat(boiArgumentCaptor.getValue()).isEqualTo(expectedBoi);
+        assertThat(response).isEqualTo(new BoiResponseDTO(expectedBoi));
+
     }
 
     @Test
