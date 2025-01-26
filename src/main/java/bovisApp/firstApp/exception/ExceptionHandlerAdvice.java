@@ -7,9 +7,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class ExceptionHandlerAdvice {
-    @ExceptionHandler
+    @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public CustomResponseError handleInvalidInput(IllegalArgumentException iae){
+    public CustomResponseError handleInvalidInput(IllegalArgumentException iae) {
         return new CustomResponseError(iae.getMessage());
     }
+    @ExceptionHandler(EntityExistsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public CustomResponseError handleEntityExistsException(EntityExistsException eee){
+        return new CustomResponseError(eee.getMessage());
+    }
+
 }

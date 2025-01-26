@@ -63,12 +63,7 @@ public class BoiServiceImpl implements BoiService {
         if(boiOp.isPresent()){
             throw new BoiJaExisteException("Boi com mesmo número e lote já cadastrado");
         }
-        Boi boi = new Boi(
-                numero,
-                raca,
-                lote,
-                estadoBoi
-        );
+        Boi boi = new Boi(numero, raca, lote, estadoBoi);
 
         boiRepository.save(boi);
         return new BoiResponseDTO(boi);

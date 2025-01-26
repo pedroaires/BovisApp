@@ -6,10 +6,11 @@ public enum EstadoBoi {
     MORTO;
 
     public static EstadoBoi getEstadoBoi(String estadoBoiStr) {
-        if(estadoBoiStr == null || estadoBoiStr.isEmpty()) {
-            throw new IllegalArgumentException("Estado do boi não pode ser nulo ou vazio");
+        try {
+            String strNorm = estadoBoiStr.toUpperCase().trim();
+            return EstadoBoi.valueOf(strNorm);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Estado do boi inválido: " + estadoBoiStr);
         }
-        String strNorm = estadoBoiStr.toUpperCase().trim();
-        return EstadoBoi.valueOf(strNorm);
     }
 }

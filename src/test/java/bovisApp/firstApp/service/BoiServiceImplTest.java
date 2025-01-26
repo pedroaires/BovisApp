@@ -74,7 +74,6 @@ class BoiServiceImplTest {
         boiService_underTest.getBois();
         verify(boiRepository).findAll();
     }
-
     @Test
     void deveRetornarBoi() {
         Integer numero = geraNumeroAleatorio();
@@ -341,7 +340,6 @@ class BoiServiceImplTest {
         Integer numero = geraNumeroAleatorio();
         String racaStr = geraRacaStrAleatoria();
         String estadoBoiStr = gerarEstadoStrAleatorio();
-        Long loteId = geraIdAleatorio();
         Long boiId = geraIdAleatorio();
 
         EstadoBoi estadoBoi = EstadoBoi.getEstadoBoi(estadoBoiStr);

@@ -13,7 +13,7 @@ public class Boi {
     @Id
     @GeneratedValue
     private Long id;
-    private int numero;
+    private Integer numero;
 
     @ManyToMany
     private Map<Date, Pesagem> pesagens;
