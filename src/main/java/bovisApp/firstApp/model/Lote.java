@@ -76,7 +76,7 @@ public class Lote {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Lote lote = (Lote) o;
-        return id.equals(lote.id);
+        return Objects.equals(this.id, lote.id);
     }
 
     @Override

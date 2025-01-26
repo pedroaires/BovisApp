@@ -92,12 +92,15 @@ public class Boi {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Boi boi = (Boi) o;
-        return this.numero == boi.numero && Objects.equals(lote, boi.lote);
+        return Objects.equals(this.numero, boi.getNumero()) &&
+                Objects.equals(lote, boi.getLote()) &&
+                Objects.equals(raca, boi.getRaca()) &&
+                Objects.equals(estadoBoi, boi.getEstadoBoi());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, numero, pesagens, raca, lote, estadoBoi);
+        return Objects.hash(numero, raca, lote, estadoBoi);
     }
 
     @Override
@@ -106,6 +109,8 @@ public class Boi {
                 "id=" + id +
                 ", numero=" + numero +
                 ", raca='" + raca + '\'' +
+                ", lote=" + lote +  '\'' +
+                ", estadoBoi=" + estadoBoi +
                 '}';
     }
 }
