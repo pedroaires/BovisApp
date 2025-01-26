@@ -26,6 +26,12 @@ public class BoiApiController {
         return boiService.getBois();
     }
 
+    @GetMapping(value = "/getBoiById")
+    @ResponseStatus(HttpStatus.OK)
+    public BoiResponseDTO getBoiById(@RequestParam Long id){
+        return boiService.getBoiById(id);
+    }
+    
     @PostMapping(value = "/cadastraBoi")
     @ResponseStatus(HttpStatus.CREATED)
     public BoiResponseDTO cadastrarBoi(@RequestBody BoiRequestDTO boiRequestDTO){
