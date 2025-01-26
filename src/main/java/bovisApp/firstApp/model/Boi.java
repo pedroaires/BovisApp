@@ -92,7 +92,7 @@ public class Boi {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Boi boi = (Boi) o;
-        return numero == boi.numero && Objects.equals(id, boi.id) && Objects.equals(pesagens, boi.pesagens) && Objects.equals(raca, boi.raca) && Objects.equals(lote, boi.lote) && estadoBoi == boi.estadoBoi;
+        return this.numero == boi.numero && Objects.equals(lote, boi.lote);
     }
 
     @Override
