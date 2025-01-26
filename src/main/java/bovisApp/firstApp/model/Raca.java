@@ -38,7 +38,7 @@ public class Raca {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Raca raca = (Raca) o;
-        return Objects.equals(nome, raca.getNome());
+        return Objects.equals(this.nome, raca.getNome());
     }
 
     @Override

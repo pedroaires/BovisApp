@@ -1,11 +1,12 @@
 package bovisApp.firstApp.controller;
 
-import bovisApp.firstApp.model.Boi;
+import bovisApp.firstApp.DTO.boi.BoiRequestDTO;
+import bovisApp.firstApp.DTO.boi.BoiResponseDTO;
 import bovisApp.firstApp.service.BoiService;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,9 +20,31 @@ public class BoiApiController {
         this.boiService = boiService;
     }
 
-    @GetMapping
-    public List<Boi> getBoi(){
+    @GetMapping(value = "/listBois")
+    @ResponseStatus(HttpStatus.OK)
+    public List<BoiResponseDTO> getBoi(){
         return boiService.getBois();
+    }
+
+    @PostMapping(value = "/cadastraBoi")
+    @ResponseStatus(HttpStatus.CREATED)
+    public BoiResponseDTO cadastrarBoi(@RequestBody BoiRequestDTO boiRequestDTO){
+        BoiResponseDTO boiResponseDTO = boiService.cadastraBoi(boiRequestDTO);
+        return boiResponseDTO;
+    }
+
+    @PostMapping(value = "/editaBoi")
+    @ResponseStatus(HttpStatus.OK)
+    public BoiResponseDTO editaBoi(@RequestBody BoiRequestDTO boiRequestDTO, @RequestParam Long boiId){
+        BoiResponseDTO boiResponseDTO = boiService.editaBoi(boiRequestDTO, boiId);
+        return boiResponseDTO;
+    }
+
+    @DeleteMapping(value = "/deletaBoi")
+    @ResponseStatus(HttpStatus.OK)
+    public BoiResponseDTO deletaBoi(@RequestParam Long id){
+        BoiResponseDTO boiResponseDTO = boiService.deleteBoi(id);
+        return boiResponseDTO;
     }
 
 }

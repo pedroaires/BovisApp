@@ -9,9 +9,6 @@
         <module name="firstApp" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="firstApp" target="11" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
