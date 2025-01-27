@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api")
+@RequestMapping(path = "/api/boi")
 public class BoiApiController {
     private final BoiService boiService;
 
@@ -31,7 +31,7 @@ public class BoiApiController {
     public BoiResponseDTO getBoiById(@RequestParam Long id){
         return boiService.getBoiById(id);
     }
-    
+
     @PostMapping(value = "/cadastraBoi")
     @ResponseStatus(HttpStatus.CREATED)
     public BoiResponseDTO cadastrarBoi(@RequestBody BoiRequestDTO boiRequestDTO){

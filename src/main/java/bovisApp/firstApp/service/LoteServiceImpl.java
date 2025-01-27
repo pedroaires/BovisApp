@@ -1,15 +1,17 @@
 package bovisApp.firstApp.service;
 
+import bovisApp.firstApp.exception.Lote.LoteNaoEncontradoException;
 import bovisApp.firstApp.model.Lote;
 import bovisApp.firstApp.repository.LoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
-public class LoteServiceImpl implements  LoteService{
+public class LoteServiceImpl implements LoteService{
     private final LoteRepository loteRepository;
 
     @Autowired
@@ -26,7 +28,14 @@ public class LoteServiceImpl implements  LoteService{
             return lote;
         }
         Optional<Lote> loteOp = loteRepository.findById(id);
-        return loteOp.orElseThrow(() -> new EntityNotFoundException("Lote não encontrado"));
+        return loteOp.orElseThrow(() -> new LoteNaoEncontradoException("Lote não encontrado"));
     }
+
+    @Override
+    public List<Lote> getLotes(){
+        return loteRepository.findAll();
+    }
+
+
 
 }
