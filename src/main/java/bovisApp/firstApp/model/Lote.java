@@ -31,6 +31,13 @@ public class Lote {
         this.descricao = descricao;
     }
 
+    public Lote(Date dataCompra, Date dataVenda, EstadoLote estadoLote, String descricao) {
+        this.dataCompra = dataCompra;
+        this.dataVenda = dataVenda;
+        this.estadoLote = estadoLote;
+        this.descricao = descricao;
+    }
+
     public Long getId() {
         return id;
     }

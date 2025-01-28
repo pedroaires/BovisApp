@@ -2,9 +2,9 @@ package bovisApp.firstApp.service;
 
 import bovisApp.firstApp.DTO.boi.BoiRequestDTO;
 import bovisApp.firstApp.DTO.boi.BoiResponseDTO;
-import bovisApp.firstApp.exception.BoiInvalidoException;
-import bovisApp.firstApp.exception.BoiJaExisteException;
-import bovisApp.firstApp.exception.BoiNaoEncontradoException;
+import bovisApp.firstApp.exception.boi.BoiInvalidoException;
+import bovisApp.firstApp.exception.boi.BoiJaExisteException;
+import bovisApp.firstApp.exception.boi.BoiNaoEncontradoException;
 import bovisApp.firstApp.model.Boi;
 import bovisApp.firstApp.model.Lote;
 import bovisApp.firstApp.model.Raca;

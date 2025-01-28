@@ -1,4 +1,4 @@
-package bovisApp.firstApp.exception.Lote;
+package bovisApp.firstApp.exception.lote;
 
 import javax.persistence.EntityNotFoundException;
 

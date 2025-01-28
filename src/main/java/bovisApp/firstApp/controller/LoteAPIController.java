@@ -1,6 +1,7 @@
 package bovisApp.firstApp.controller;
 
 
+import bovisApp.firstApp.DTO.lote.LoteRequestDTO;
 import bovisApp.firstApp.DTO.lote.LoteResponseDTO;
 import bovisApp.firstApp.service.LoteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +35,13 @@ public class LoteAPIController {
         return response;
     }
 
-//    @PostMapping(value = "/cadastraLote")
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public LoteResponseDTO cadastrarLote(@RequestBody LoteRequestDTO loteRequestDTO){
-//        LoteResponseDTO loteResponseDTO = loteService.cadastraLote(loteRequestDTO);
-//        return loteResponseDTO;
-//    }
-//
+    @PostMapping(value = "/cadastraLote")
+    @ResponseStatus(HttpStatus.CREATED)
+    public LoteResponseDTO cadastrarLote(@RequestBody LoteRequestDTO loteRequestDTO){
+        LoteResponseDTO loteResponseDTO = new LoteResponseDTO(loteService.cadastraLote(loteRequestDTO));
+        return loteResponseDTO;
+    }
+
 //    @PostMapping(value = "/editaLote")
 //    @ResponseStatus(HttpStatus.OK)
 //    public LoteResponseDTO editaLote(@RequestBody LoteRequestDTO loteRequestDTO, @RequestParam Long loteId){

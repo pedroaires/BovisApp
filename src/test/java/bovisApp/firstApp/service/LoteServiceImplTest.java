@@ -1,7 +1,10 @@
 package bovisApp.firstApp.service;
 
-import bovisApp.firstApp.exception.Lote.LoteNaoEncontradoException;
+import bovisApp.firstApp.DTO.lote.LoteRequestDTO;
+import bovisApp.firstApp.exception.lote.LoteInvalidoException;
+import bovisApp.firstApp.exception.lote.LoteNaoEncontradoException;
 import bovisApp.firstApp.model.Lote;
+import bovisApp.firstApp.model.enumeration.EstadoLote;
 import bovisApp.firstApp.repository.LoteRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +13,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -23,12 +27,43 @@ public class LoteServiceImplTest {
     @Mock
     private LoteRepository loteRepository;
 
+    private Long geraIdAleatorio() {
+        return (long) (Math.random() * 1000);
+    }
+    private Date gerarDataAleatoria() {
+        return new Date((long) (Math.random() * 1000000000));
+    }
+
+    public static Date adicionarDiasAleatorios(Date data, int maxDias) {
+        // Gerar número aleatório de dias entre 0 e maxDias
+        int diasAleatorios = (int) (Math.random() * maxDias);
+
+        // Adicionar os dias convertendo para milissegundos
+        long milissegundosPorDia = 24L * 60 * 60 * 1000;
+        long novaDataEmMillis = data.getTime() + diasAleatorios * milissegundosPorDia;
+
+        return new Date(novaDataEmMillis);
+    }
+
+
+    private EstadoLote geraEstadoLoteAleatorio() {
+        EstadoLote[] estados = EstadoLote.values();
+        int indiceAleatorio = (int) (Math.random() * estados.length);
+        return estados[indiceAleatorio];
+    }
+
+    private LoteRequestDTO criaLoteRequestDTO(Date compra, Date venda, String descricao, EstadoLote estado){
+        LoteRequestDTO loteRequestDTO = new LoteRequestDTO();
+        loteRequestDTO.setDataCompra(compra);
+        loteRequestDTO.setDataVenda(venda);
+        loteRequestDTO.setDescricao(descricao);
+        loteRequestDTO.setEstadoLote(estado);
+        return loteRequestDTO;
+    }
+
     @BeforeEach
     void setUp(){
         loteService_underTest = new LoteServiceImpl(loteRepository);
-    }
-    private Long geraIdAleatorio() {
-        return (long) (Math.random() * 1000);
     }
     @Test
     void deveRetornarLotePorId(){
@@ -105,4 +140,84 @@ public class LoteServiceImplTest {
         verify(loteRepository).findAll();
         assertThat(response).isEqualTo(lotesEsperados);
     }
+
+    @Test
+    void deveCadastrarLoteDadosCompletos(){
+        // given
+        Date dataCompra = gerarDataAleatoria();
+        Date dataVenda = adicionarDiasAleatorios(dataCompra, 10);
+        String descricao = "Lote de boi";
+        EstadoLote estado = geraEstadoLoteAleatorio();
+
+        LoteRequestDTO loteRequestDTO = criaLoteRequestDTO(dataCompra, dataVenda, descricao, estado);
+        Lote loteEsperado = new Lote(dataCompra, dataVenda, estado, descricao);
+
+        // when
+        ArgumentCaptor<Lote> loteArgumentCaptor = ArgumentCaptor.forClass(Lote.class);
+        Lote response = loteService_underTest.cadastraLote(loteRequestDTO);
+
+        // then
+        verify(loteRepository).save(loteArgumentCaptor.capture());
+        assertThat(loteArgumentCaptor.getValue()).isEqualTo(loteEsperado);
+        assertThat(response.getDataCompra()).isEqualTo(loteEsperado.getDataCompra());
+        assertThat(response.getDataVenda()).isEqualTo(loteEsperado.getDataVenda());
+        assertThat(response.getDescricao()).isEqualTo(loteEsperado.getDescricao());
+        assertThat(response.getEstado()).isEqualTo(loteEsperado.getEstado());
+    }
+
+    @Test
+    void deveCadastrarLoteDadosNulos(){
+        // given
+        Date dataCompra = null;
+        Date dataVenda = null;
+        String descricao = null;
+        EstadoLote estado = null;
+
+        LoteRequestDTO loteRequestDTO = criaLoteRequestDTO(dataCompra, dataVenda, descricao, estado);
+        Lote loteEsperado = new Lote();
+
+        // when
+        ArgumentCaptor<Lote> loteArgumentCaptor = ArgumentCaptor.forClass(Lote.class);
+        Lote response = loteService_underTest.cadastraLote(loteRequestDTO);
+
+        // then
+        verify(loteRepository).save(loteArgumentCaptor.capture());
+        assertThat(loteArgumentCaptor.getValue()).isEqualTo(loteEsperado);
+        assertThat(response.getDataCompra()).isEqualTo(loteEsperado.getDataCompra());
+        assertThat(response.getDataVenda()).isEqualTo(loteEsperado.getDataVenda());
+        assertThat(response.getDescricao()).isEqualTo(loteEsperado.getDescricao());
+        assertThat(response.getEstado()).isEqualTo(loteEsperado.getEstado());
+    }
+
+    @Test
+    void naoDeveCadastrarLoteCompraAposVenda(){
+        // given
+        Date dataCompra = gerarDataAleatoria();
+        Date dataVenda = adicionarDiasAleatorios(dataCompra, -10);
+        String descricao = "Lote de boi";
+        EstadoLote estado = geraEstadoLoteAleatorio();
+
+        LoteRequestDTO loteRequestDTO = criaLoteRequestDTO(dataCompra, dataVenda, descricao, estado);
+
+        // then
+        assertThatThrownBy(() -> loteService_underTest.cadastraLote(loteRequestDTO))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void naoDeveCadastrarLoteVendaSemCompra(){
+        // given
+        Date dataCompra = null;
+        Date dataVenda = gerarDataAleatoria();
+        String descricao = "Lote de boi";
+        EstadoLote estado = geraEstadoLoteAleatorio();
+
+        LoteRequestDTO loteRequestDTO = criaLoteRequestDTO(dataCompra, dataVenda, descricao, estado);
+
+        // then
+        assertThatThrownBy(() -> loteService_underTest.cadastraLote(loteRequestDTO))
+                .isInstanceOf(LoteInvalidoException.class);
+    }
+
+
 }

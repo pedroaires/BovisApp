@@ -1,4 +1,4 @@
-package bovisApp.firstApp.exception;
+package bovisApp.firstApp.exception.boi;
 
 import javax.persistence.EntityNotFoundException;
 
