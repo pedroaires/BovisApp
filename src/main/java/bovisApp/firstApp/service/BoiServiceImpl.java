@@ -39,13 +39,13 @@ public class BoiServiceImpl implements BoiService {
     }
 
     @Override
-    public BoiResponseDTO getBoiById(Long id){
+    public Boi getBoiById(Long id){
         Boi boi = boiRepository.findById(id).orElseThrow(() -> new BoiNaoEncontradoException("Boi não encontrado"));
-        return new BoiResponseDTO(boi);
+        return boi;
     }
 
     @Override
-    public BoiResponseDTO cadastraBoi(BoiRequestDTO boiRequestDTO) throws IllegalArgumentException{
+    public Boi cadastraBoi(BoiRequestDTO boiRequestDTO) throws IllegalArgumentException{
         Integer numero = Optional.ofNullable(boiRequestDTO.getNumero()).orElseThrow(
                 () -> new BoiInvalidoException("Número do boi não pode ser nulo")
         );
@@ -66,11 +66,11 @@ public class BoiServiceImpl implements BoiService {
         Boi boi = new Boi(numero, raca, lote, estadoBoi);
 
         boiRepository.save(boi);
-        return new BoiResponseDTO(boi);
+        return boi;
     }
 
     @Override
-    public BoiResponseDTO editaBoi(BoiRequestDTO boiRequestDTO, Long id){
+    public Boi editaBoi(BoiRequestDTO boiRequestDTO, Long id){
         Boi boi = boiRepository.findById(id).orElseThrow(() -> new BoiNaoEncontradoException("Boi não encontrado"));
         Integer numero = Optional.ofNullable(boiRequestDTO.getNumero()).orElseThrow(
                 () -> new BoiInvalidoException("Número do boi não pode ser nulo")
@@ -89,14 +89,14 @@ public class BoiServiceImpl implements BoiService {
         boi.setLote(lote);
         boi.setEstadoBoi(estadoBoi);
         boiRepository.save(boi);
-        return new BoiResponseDTO(boi);
+        return boi;
     }
 
     @Override
-    public BoiResponseDTO deleteBoi(Long id){
+    public Boi deleteBoi(Long id){
         Boi boi = boiRepository.findById(id).orElseThrow(() -> new BoiNaoEncontradoException("Boi não encontrado"));
         boiRepository.delete(boi);
-        return new BoiResponseDTO(boi);
+        return boi;
     }
 
 

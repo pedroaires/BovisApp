@@ -10,11 +10,11 @@ import java.util.List;
 public interface BoiService {
     List<BoiResponseDTO> getBois();
 
-    BoiResponseDTO getBoiById(Long id);
+    Boi getBoiById(Long id);
 
-    BoiResponseDTO cadastraBoi(BoiRequestDTO boiRequestDTO);
+    Boi cadastraBoi(BoiRequestDTO boiRequestDTO);
 
-    BoiResponseDTO editaBoi(BoiRequestDTO boiRequestDTO, Long boiId);
+    Boi editaBoi(BoiRequestDTO boiRequestDTO, Long boiId);
 
-    BoiResponseDTO deleteBoi(Long id);
+    Boi deleteBoi(Long id);
 }

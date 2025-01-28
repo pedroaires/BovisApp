@@ -90,9 +90,9 @@ class BoiServiceImplTest {
         Boi boiEsperado = new Boi(numero, raca, lote, estadoBoi);
 
         when(boiRepository.findById(boiId)).thenReturn(Optional.of(boiEsperado));
-        BoiResponseDTO response = boiService_underTest.getBoiById(boiId);
+        Boi response = boiService_underTest.getBoiById(boiId);
         verify(boiRepository).findById(boiId);
-        assertThat(response).isEqualTo(new BoiResponseDTO(boiEsperado));
+        assertThat(response).isEqualTo(boiEsperado);
     }
 
     @Test
@@ -120,7 +120,7 @@ class BoiServiceImplTest {
         lote.setId(loteId);
         when(loteService.getLoteById(loteId)).thenReturn(lote);
 
-        BoiResponseDTO response = boiService_underTest.cadastraBoi(boiRequestDTO);
+        Boi response = boiService_underTest.cadastraBoi(boiRequestDTO);
 
         Boi boiEsperado = new Boi(numero, raca, lote, estadoBoi);
 
@@ -130,7 +130,7 @@ class BoiServiceImplTest {
         ArgumentCaptor<Boi> boiArgumentCaptor = ArgumentCaptor.forClass(Boi.class);
         verify(boiRepository).save(boiArgumentCaptor.capture());
         assertThat(boiArgumentCaptor.getValue()).isEqualTo(boiEsperado);
-        assertThat(response).isEqualTo(new BoiResponseDTO(boiEsperado));
+        assertThat(response).isEqualTo(boiEsperado);
     }
 
     @Test
@@ -174,7 +174,7 @@ class BoiServiceImplTest {
         Lote lote = new Lote();
         when(loteService.getLoteById(loteId)).thenReturn(lote);
 
-        BoiResponseDTO response = boiService_underTest.cadastraBoi(boiRequestDTO);
+        Boi response = boiService_underTest.cadastraBoi(boiRequestDTO);
         Boi boiEsperado = new Boi(numero, raca, lote, estadoBoi);
 
         verify(loteService).getLoteById(loteId);
@@ -183,7 +183,7 @@ class BoiServiceImplTest {
         ArgumentCaptor<Boi> boiArgumentCaptor = ArgumentCaptor.forClass(Boi.class);
         verify(boiRepository).save(boiArgumentCaptor.capture());
         assertThat(boiArgumentCaptor.getValue()).isEqualTo(boiEsperado);
-        assertThat(response).isEqualTo(new BoiResponseDTO(boiEsperado));
+        assertThat(response).isEqualTo(boiEsperado);
     }
 
     @Test
@@ -235,7 +235,7 @@ class BoiServiceImplTest {
         lote.setId(loteId);
         when(loteService.getLoteById(loteId)).thenReturn(lote);
 
-        BoiResponseDTO response = boiService_underTest.cadastraBoi(boiRequestDTO);
+        Boi response = boiService_underTest.cadastraBoi(boiRequestDTO);
 
         Boi boiEsperado = new Boi(numero, raca, lote, estadoBoi);
 
@@ -245,7 +245,7 @@ class BoiServiceImplTest {
         ArgumentCaptor<Boi> boiArgumentCaptor = ArgumentCaptor.forClass(Boi.class);
         verify(boiRepository).save(boiArgumentCaptor.capture());
         assertThat(boiArgumentCaptor.getValue()).isEqualTo(boiEsperado);
-        assertThat(response).isEqualTo(new BoiResponseDTO(boiEsperado));
+        assertThat(response).isEqualTo(boiEsperado);
     }
 
 
@@ -269,7 +269,7 @@ class BoiServiceImplTest {
         Boi boiEsperado = new Boi(numero, raca, lote, estadoBoi);
         when(boiRepository.findById(boiId)).thenReturn(Optional.of(boiEsperado));
 
-        BoiResponseDTO response = boiService_underTest.editaBoi(boiRequestDTO, boiId);
+        Boi response = boiService_underTest.editaBoi(boiRequestDTO, boiId);
 
         verify(racaService).getRacaByNome(racaStr);
         verify(loteService).getLoteById(loteId);
@@ -277,7 +277,7 @@ class BoiServiceImplTest {
         ArgumentCaptor<Boi> boiArgumentCaptor = ArgumentCaptor.forClass(Boi.class);
         verify(boiRepository).save(boiArgumentCaptor.capture());
         assertThat(boiArgumentCaptor.getValue()).isEqualTo(boiEsperado);
-        assertThat(response).isEqualTo(new BoiResponseDTO(boiEsperado));
+        assertThat(response).isEqualTo(boiEsperado);
     }
 
     @Test
@@ -350,11 +350,11 @@ class BoiServiceImplTest {
 
         when(boiRepository.findById(boiId)).thenReturn(Optional.of(boiEsperado));
 
-        BoiResponseDTO response = boiService_underTest.deleteBoi(boiId);
+        Boi response = boiService_underTest.deleteBoi(boiId);
 
         verify(boiRepository).findById(boiId);
         verify(boiRepository).delete(boiEsperado);
-        assertThat(response).isEqualTo(new BoiResponseDTO(boiEsperado));
+        assertThat(response).isEqualTo(boiEsperado);
     }
 
     @Test

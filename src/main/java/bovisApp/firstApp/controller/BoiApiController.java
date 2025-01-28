@@ -29,28 +29,29 @@ public class BoiApiController {
     @GetMapping(value = "/getBoiById")
     @ResponseStatus(HttpStatus.OK)
     public BoiResponseDTO getBoiById(@RequestParam Long id){
-        return boiService.getBoiById(id);
+        BoiResponseDTO response = new BoiResponseDTO(boiService.getBoiById(id));
+        return response;
     }
 
     @PostMapping(value = "/cadastraBoi")
     @ResponseStatus(HttpStatus.CREATED)
     public BoiResponseDTO cadastrarBoi(@RequestBody BoiRequestDTO boiRequestDTO){
-        BoiResponseDTO boiResponseDTO = boiService.cadastraBoi(boiRequestDTO);
-        return boiResponseDTO;
+        BoiResponseDTO response = new BoiResponseDTO(boiService.cadastraBoi(boiRequestDTO));
+        return response;
     }
 
     @PostMapping(value = "/editaBoi")
     @ResponseStatus(HttpStatus.OK)
     public BoiResponseDTO editaBoi(@RequestBody BoiRequestDTO boiRequestDTO, @RequestParam Long boiId){
-        BoiResponseDTO boiResponseDTO = boiService.editaBoi(boiRequestDTO, boiId);
-        return boiResponseDTO;
+        BoiResponseDTO response = new BoiResponseDTO(boiService.editaBoi(boiRequestDTO, boiId));
+        return response;
     }
 
     @DeleteMapping(value = "/deletaBoi")
     @ResponseStatus(HttpStatus.OK)
     public BoiResponseDTO deletaBoi(@RequestParam Long id){
-        BoiResponseDTO boiResponseDTO = boiService.deleteBoi(id);
-        return boiResponseDTO;
+        BoiResponseDTO response = new BoiResponseDTO(boiService.deleteBoi(id));
+        return response;
     }
 
 }
