@@ -56,6 +56,38 @@ public class LoteServiceImpl implements LoteService{
         return lote;
     }
 
+    @Override
+    public Lote editaLote(LoteRequestDTO loteRequestDTO, Long loteId){
+        if (loteId == null){
+            throw new LoteInvalidoException("Id do lote não pode ser nulo");
+        }
+        Optional<Lote> loteOp = loteRepository.findById(loteId);
+        Lote lote = loteOp.orElseThrow(() -> new LoteNaoEncontradoException("Lote não encontrado"));
+        if(loteRequestDTO.getDataVenda() != null){
+            if (loteRequestDTO.getDataCompra() == null){
+                throw new LoteInvalidoException("Data de compra não pode ser nula quando data de venda não é nula");
+            }
+            if (loteRequestDTO.getDataVenda().before(loteRequestDTO.getDataCompra())) {
+                throw new LoteInvalidoException("Data de venda não pode ser anterior a data de compra");
+            }
+        }
+        lote.setDataCompra(loteRequestDTO.getDataCompra());
+        lote.setDataVenda(loteRequestDTO.getDataVenda());
+        lote.setEstado(loteRequestDTO.getEstadoLote());
+        lote.setDescricao(loteRequestDTO.getDescricao());
+        loteRepository.save(lote);
+        return lote;
+    }
+
+    @Override
+    public Lote deletaLote(Long id){
+        if (id == null){
+            throw new LoteInvalidoException("Id do lote não pode ser nulo");
+        }
+        Lote lote = loteRepository.findById(id).orElseThrow(() -> new LoteNaoEncontradoException("Lote não encontrado"));
+        loteRepository.delete(lote);
+        return lote;
+    }
 
 
 }

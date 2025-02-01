@@ -42,17 +42,17 @@ public class LoteAPIController {
         return loteResponseDTO;
     }
 
-//    @PostMapping(value = "/editaLote")
-//    @ResponseStatus(HttpStatus.OK)
-//    public LoteResponseDTO editaLote(@RequestBody LoteRequestDTO loteRequestDTO, @RequestParam Long loteId){
-//        LoteResponseDTO loteResponseDTO = loteService.editaLote(loteRequestDTO, loteId);
-//        return loteResponseDTO;
-//    }
-//
-//    @DeleteMapping(value = "/deletaLote")
-//    @ResponseStatus(HttpStatus.OK)
-//    public LoteResponseDTO deletaLote(@RequestParam Long id){
-//        LoteResponseDTO loteResponseDTO = loteService.deleteLote(id);
-//        return loteResponseDTO;
-//    }
+    @PostMapping(value = "/editaLote")
+    @ResponseStatus(HttpStatus.OK)
+    public LoteResponseDTO editaLote(@RequestBody LoteRequestDTO loteRequestDTO, @RequestParam Long loteId){
+        LoteResponseDTO loteResponseDTO = new LoteResponseDTO( loteService.editaLote(loteRequestDTO, loteId));
+        return loteResponseDTO;
+    }
+
+    @DeleteMapping(value = "/deletaLote")
+    @ResponseStatus(HttpStatus.OK)
+    public LoteResponseDTO deletaLote(@RequestParam Long id){
+        LoteResponseDTO loteResponseDTO = new LoteResponseDTO(loteService.deletaLote(id));
+        return loteResponseDTO;
+    }
 }

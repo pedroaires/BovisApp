@@ -14,4 +14,8 @@ public interface LoteService {
     List<Lote> getLotes();
 
     Lote cadastraLote(LoteRequestDTO loteRequestDTO);
+
+    Lote editaLote(LoteRequestDTO loteRequestDTO, Long loteId);
+
+    Lote deletaLote(Long id);
 }

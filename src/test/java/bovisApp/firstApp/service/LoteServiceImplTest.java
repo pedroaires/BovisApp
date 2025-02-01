@@ -219,5 +219,159 @@ public class LoteServiceImplTest {
                 .isInstanceOf(LoteInvalidoException.class);
     }
 
+    @Test
+    void deveEditarLoteDadosCompletos(){
+        // given
+        Long id = geraIdAleatorio();
+        Date dataCompra = gerarDataAleatoria();
+        Date dataVenda = adicionarDiasAleatorios(dataCompra, 10);
+        String descricao = "Lote de boi";
+        EstadoLote estado = geraEstadoLoteAleatorio();
+
+        LoteRequestDTO loteRequestDTO = criaLoteRequestDTO(dataCompra, dataVenda, descricao, estado);
+        Lote loteEsperado = new Lote(dataCompra, dataVenda, estado, descricao);
+        Lote loteExistente = new Lote();
+        loteExistente.setId(id);
+        loteEsperado.setId(id);
+
+        // when
+        when(loteRepository.findById(id)).thenReturn(java.util.Optional.of(loteExistente));
+        ArgumentCaptor<Lote> loteArgumentCaptor = ArgumentCaptor.forClass(Lote.class);
+        Lote response = loteService_underTest.editaLote(loteRequestDTO, id);
+
+        // then
+        verify(loteRepository).save(loteArgumentCaptor.capture());
+        assertThat(loteArgumentCaptor.getValue()).isEqualTo(loteEsperado);
+        assertThat(response.getDataCompra()).isEqualTo(loteEsperado.getDataCompra());
+        assertThat(response.getDataVenda()).isEqualTo(loteEsperado.getDataVenda());
+        assertThat(response.getDescricao()).isEqualTo(loteEsperado.getDescricao());
+        assertThat(response.getEstado()).isEqualTo(loteEsperado.getEstado());
+    }
+
+    @Test
+    void deveEditarLoteDadosNulos(){
+        // given
+        Long id = geraIdAleatorio();
+        Date dataCompra = null;
+        Date dataVenda = null;
+        String descricao = null;
+        EstadoLote estado = null;
+
+        LoteRequestDTO loteRequestDTO = criaLoteRequestDTO(dataCompra, dataVenda, descricao, estado);
+        Lote loteEsperado = new Lote();
+        loteEsperado.setId(id);
+
+        Lote loteExistente = new Lote();
+        loteExistente.setId(id);
+
+        // when
+        when(loteRepository.findById(id)).thenReturn(java.util.Optional.of(loteExistente));
+        ArgumentCaptor<Lote> loteArgumentCaptor = ArgumentCaptor.forClass(Lote.class);
+        Lote response = loteService_underTest.editaLote(loteRequestDTO, id);
+
+        // then
+        verify(loteRepository).save(loteArgumentCaptor.capture());
+        assertThat(loteArgumentCaptor.getValue()).isEqualTo(loteEsperado);
+        assertThat(response.getDataCompra()).isEqualTo(loteEsperado.getDataCompra());
+        assertThat(response.getDataVenda()).isEqualTo(loteEsperado.getDataVenda());
+        assertThat(response.getDescricao()).isEqualTo(loteEsperado.getDescricao());
+        assertThat(response.getEstado()).isEqualTo(loteEsperado.getEstado());
+    }
+
+    @Test
+    void naoDeveEditarLoteIdNulo(){
+        // given
+        Long id = null;
+        Date dataCompra = gerarDataAleatoria();
+        Date dataVenda = adicionarDiasAleatorios(dataCompra, 10);
+        String descricao = "Lote de boi";
+        EstadoLote estado = geraEstadoLoteAleatorio();
+
+        LoteRequestDTO loteRequestDTO = criaLoteRequestDTO(dataCompra, dataVenda, descricao, estado);
+
+        // then
+        assertThatThrownBy(() -> loteService_underTest.editaLote(loteRequestDTO, id))
+                .isInstanceOf(LoteInvalidoException.class);
+    }
+
+    @Test
+    void naoDeveEditarLoteCompraAposVenda(){
+        // given
+        Long id = geraIdAleatorio();
+        Date dataCompra = gerarDataAleatoria();
+        Date dataVenda = adicionarDiasAleatorios(dataCompra, -10);
+        String descricao = "Lote de boi";
+        EstadoLote estado = geraEstadoLoteAleatorio();
+
+        LoteRequestDTO loteRequestDTO = criaLoteRequestDTO(dataCompra, dataVenda, descricao, estado);
+
+        when(loteRepository.findById(id)).thenReturn(java.util.Optional.of(new Lote()));
+        // then
+        assertThatThrownBy(() -> loteService_underTest.editaLote(loteRequestDTO, id))
+                .isInstanceOf(LoteInvalidoException.class);
+    }
+
+    @Test
+    void naoDeveEditarLoteVendaSemCompra(){
+        // given
+        Long id = geraIdAleatorio();
+        Date dataCompra = null;
+        Date dataVenda = gerarDataAleatoria();
+        String descricao = "Lote de boi";
+        EstadoLote estado = geraEstadoLoteAleatorio();
+
+        LoteRequestDTO loteRequestDTO = criaLoteRequestDTO(dataCompra, dataVenda, descricao, estado);
+
+
+        // when
+        when(loteRepository.findById(id)).thenReturn(java.util.Optional.of(new Lote()));
+
+        // then
+        assertThatThrownBy(() -> loteService_underTest.editaLote(loteRequestDTO, id))
+                .isInstanceOf(LoteInvalidoException.class);
+    }
+
+    @Test
+    void deveDeletarLoteIdExistente(){
+        // given
+        Long id = geraIdAleatorio();
+        Lote loteEsperado = new Lote();
+        loteEsperado.setId(id);
+
+        // when
+        when(loteRepository.findById(id)).thenReturn(java.util.Optional.of(loteEsperado));
+        ArgumentCaptor<Lote> loteArgumentCaptor = ArgumentCaptor.forClass(Lote.class);
+        Lote response = loteService_underTest.deletaLote(id);
+
+        // then
+        verify(loteRepository).delete(loteArgumentCaptor.capture());
+        assertThat(loteArgumentCaptor.getValue()).isEqualTo(loteEsperado);
+        assertThat(response).isEqualTo(loteEsperado);
+    }
+
+    @Test
+    void naoDeveDeletarLoteIdInexistente(){
+        // given
+        Long id = geraIdAleatorio();
+
+        // when
+        when(loteRepository.findById(id)).thenReturn(java.util.Optional.ofNullable(null));
+
+        // then
+        assertThatThrownBy(() -> loteService_underTest.deletaLote(id))
+                .isInstanceOf(LoteNaoEncontradoException.class);
+    }
+
+    @Test
+    void naoDeveDeletarLoteIdNulo(){
+        // given
+        Long id = null;
+
+        // then
+        assertThatThrownBy(() -> loteService_underTest.deletaLote(id))
+                .isInstanceOf(LoteInvalidoException.class);
+    }
+
+
 
 }
