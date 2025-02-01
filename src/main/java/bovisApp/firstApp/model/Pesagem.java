@@ -1,9 +1,6 @@
 package bovisApp.firstApp.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
@@ -15,17 +12,21 @@ public class Pesagem {
 
     private Date data;
 
+    @ManyToOne
+    private Boi boi;
+
     private Double peso;
 
-    private String comentario;
+    private String descricao;
 
     @ManyToMany
     private List<Medicacao> medicacoes;
 
-    public Pesagem(Date data, Double peso, String comentario, List<Medicacao> medicacoes) {
+
+    public Pesagem(Date data, Double peso, String descricao, List<Medicacao> medicacoes) {
         this.data = data;
         this.peso = peso;
-        this.comentario = comentario;
+        this.descricao = descricao;
         this.medicacoes = medicacoes;
     }
 
@@ -49,12 +50,12 @@ public class Pesagem {
         this.peso = peso;
     }
 
-    public String getComentario() {
-        return comentario;
+    public String getDescricao() {
+        return descricao;
     }
 
-    public void setComentario(String comentario) {
-        this.comentario = comentario;
+    public void setDescricao(String comentario) {
+        this.descricao = comentario;
     }
 
     public List<Medicacao> getMedicacoes() {

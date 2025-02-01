@@ -1,7 +1,6 @@
 package bovisApp.firstApp.service;
 
 import bovisApp.firstApp.DTO.boi.BoiRequestDTO;
-import bovisApp.firstApp.DTO.boi.BoiResponseDTO;
 import bovisApp.firstApp.exception.boi.BoiInvalidoException;
 import bovisApp.firstApp.exception.boi.BoiJaExisteException;
 import bovisApp.firstApp.exception.boi.BoiNaoEncontradoException;
@@ -31,10 +30,7 @@ public class BoiServiceImpl implements BoiService {
 
     @Override
     public List<Boi> getBois() {
-        List<Boi> responseList = new ArrayList<>();
-        for(Boi boi : boiRepository.findAll()){
-            responseList.add(boi);
-        }
+        List<Boi> responseList = boiRepository.findAll();
         return responseList;
     }
 

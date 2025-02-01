@@ -13,11 +13,11 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api/boi")
-public class BoiApiController {
+public class BoiAPIController {
     private final BoiService boiService;
 
     @Autowired
-    public BoiApiController(BoiService boiService) {
+    public BoiAPIController(BoiService boiService) {
         this.boiService = boiService;
     }
 

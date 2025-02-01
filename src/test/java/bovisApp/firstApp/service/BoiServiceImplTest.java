@@ -17,6 +17,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -69,9 +71,19 @@ class BoiServiceImplTest {
     }
 
     @Test
-    void testGetBois() {
-        boiService_underTest.getBois();
+    void deveRetornarBois() {
+        // given
+        List<Boi> bois = new ArrayList<>();
+        bois.add(new Boi(1, new Raca("Angus"), new Lote(), EstadoBoi.NA_FAZENDA));
+        bois.add(new Boi(2, new Raca("Brangus"), new Lote(), EstadoBoi.VENDIDO));
+        bois.add(new Boi(3, new Raca("Nelore"), new Lote(), EstadoBoi.MORTO));
+        // when
+        when(boiRepository.findAll()).thenReturn(bois);
+        List<Boi> response = boiService_underTest.getBois();
+
+        // then
         verify(boiRepository).findAll();
+        assertThat(response).isEqualTo(bois);
     }
     @Test
     void deveRetornarBoi() {

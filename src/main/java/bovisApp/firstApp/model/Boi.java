@@ -15,7 +15,7 @@ public class Boi {
     private Long id;
     private Integer numero;
 
-    @ManyToMany
+    @OneToMany
     private Map<Date, Pesagem> pesagens;
 
     @OneToOne
