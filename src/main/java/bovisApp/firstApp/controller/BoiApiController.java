@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api/boi")
@@ -23,7 +24,8 @@ public class BoiApiController {
     @GetMapping(value = "/listBois")
     @ResponseStatus(HttpStatus.OK)
     public List<BoiResponseDTO> getBoi(){
-        return boiService.getBois();
+        List<BoiResponseDTO> responseList = boiService.getBois().stream().map(BoiResponseDTO::new).collect(Collectors.toList());
+        return responseList;
     }
 
     @GetMapping(value = "/getBoiById")

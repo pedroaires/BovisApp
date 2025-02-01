@@ -30,10 +30,10 @@ public class BoiServiceImpl implements BoiService {
     }
 
     @Override
-    public List<BoiResponseDTO> getBois() {
-        List<BoiResponseDTO> responseList = new ArrayList<>();
+    public List<Boi> getBois() {
+        List<Boi> responseList = new ArrayList<>();
         for(Boi boi : boiRepository.findAll()){
-            responseList.add(new BoiResponseDTO(boi));
+            responseList.add(boi);
         }
         return responseList;
     }

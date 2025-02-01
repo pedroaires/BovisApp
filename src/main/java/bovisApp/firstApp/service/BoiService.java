@@ -8,7 +8,7 @@ import bovisApp.firstApp.model.Boi;
 import java.util.List;
 
 public interface BoiService {
-    List<BoiResponseDTO> getBois();
+    List<Boi> getBois();
 
     Boi getBoiById(Long id);
 
