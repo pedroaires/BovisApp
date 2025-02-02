@@ -46,7 +46,9 @@ public class PesagemServiceImplTest {
     }
 
     private Pesagem gerarPesagemAleatoria() {
-        return new Pesagem(gerarDataAleatoria(), geraPesoAleatorio(), "descricao", new ArrayList<Medicacao>());
+        Pesagem pesagem = new Pesagem(gerarDataAleatoria(), geraPesoAleatorio(), "descricao", new ArrayList<Medicacao>());
+        pesagem.setId(geraIdAleatorio());
+        return pesagem;
     }
 
     private Boi gerarBoiAleatorio() {
@@ -219,4 +221,250 @@ public class PesagemServiceImplTest {
                 )
         )).isInstanceOf(IllegalArgumentException.class);
     }
+
+    @Test
+    void deveEditarPesagemDadosCompletos() {
+        // given
+        Pesagem pesagemEsperada = gerarPesagemAleatoria();
+        String medicacaoStr = "medicacao";
+        Boi boi = gerarBoiAleatorio();
+        pesagemEsperada.setBoi(boi);
+        Medicacao medicacao = new Medicacao(medicacaoStr);
+        List<Medicacao> medicacaoList = new ArrayList<Medicacao>();
+        medicacaoList.add(medicacao);
+        pesagemEsperada.setMedicacoes(medicacaoList);
+
+        // when
+        when(pesagemRepository.findById(pesagemEsperada.getId())).thenReturn(java.util.Optional.of(pesagemEsperada));
+        when(medicacaoService.getOrCreateMedicacao(medicacaoStr)).thenReturn(medicacao);
+        when(boiService.getBoiById(boi.getId())).thenReturn(boi);
+        ArgumentCaptor<Pesagem> pesagemArgumentCaptor = ArgumentCaptor.forClass(Pesagem.class);
+        Pesagem response = pesagemService_underTest.editaPesagem(
+                new PesagemRequestDTO(
+                        boi.getId(),
+                        pesagemEsperada.getPeso(),
+                        pesagemEsperada.getDescricao(),
+                        pesagemEsperada.getData(),
+                        List.of(medicacaoStr)
+                ),
+                pesagemEsperada.getId()
+        );
+
+        // then
+        verify(pesagemRepository).save(pesagemArgumentCaptor.capture());
+        assertThat(pesagemArgumentCaptor.getValue()).isEqualTo(pesagemEsperada);
+        assertThat(response).isEqualTo(pesagemEsperada);
+    }
+
+    @Test
+    void naoDeveEditarPesagemIdNulo(){
+        // given
+        Pesagem pesagemEsperada = gerarPesagemAleatoria();
+        String medicacaoStr = "medicacao";
+        Boi boi = gerarBoiAleatorio();
+        pesagemEsperada.setBoi(boi);
+        Medicacao medicacao = new Medicacao(medicacaoStr);
+        List<Medicacao> medicacaoList = new ArrayList<Medicacao>();
+        medicacaoList.add(medicacao);
+        pesagemEsperada.setMedicacoes(medicacaoList);
+
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> pesagemService_underTest.editaPesagem(
+                new PesagemRequestDTO(
+                        boi.getId(),
+                        pesagemEsperada.getPeso(),
+                        pesagemEsperada.getDescricao(),
+                        pesagemEsperada.getData(),
+                        List.of(medicacaoStr)
+                ),
+                null
+        )).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void naoDeveEditarPesagemInexistente(){
+        // given
+        Pesagem pesagemEsperada = gerarPesagemAleatoria();
+        String medicacaoStr = "medicacao";
+        Boi boi = gerarBoiAleatorio();
+        pesagemEsperada.setBoi(boi);
+        Medicacao medicacao = new Medicacao(medicacaoStr);
+        List<Medicacao> medicacaoList = new ArrayList<Medicacao>();
+        medicacaoList.add(medicacao);
+        pesagemEsperada.setMedicacoes(medicacaoList);
+
+        // when
+        when(pesagemRepository.findById(pesagemEsperada.getId())).thenReturn(java.util.Optional.empty());
+
+        // then
+        assertThatThrownBy(() -> pesagemService_underTest.editaPesagem(
+                new PesagemRequestDTO(
+                        boi.getId(),
+                        pesagemEsperada.getPeso(),
+                        pesagemEsperada.getDescricao(),
+                        pesagemEsperada.getData(),
+                        List.of(medicacaoStr)
+                ),
+                pesagemEsperada.getId()
+        )).isInstanceOf(javax.persistence.EntityNotFoundException.class);
+    }
+
+    @Test
+    void naoDeveEditarPesagemPesoNulo(){
+        // given
+        Pesagem pesagemEsperada = gerarPesagemAleatoria();
+        String medicacaoStr = "medicacao";
+        Boi boi = gerarBoiAleatorio();
+        pesagemEsperada.setBoi(boi);
+        Medicacao medicacao = new Medicacao(medicacaoStr);
+        List<Medicacao> medicacaoList = new ArrayList<Medicacao>();
+        medicacaoList.add(medicacao);
+        pesagemEsperada.setMedicacoes(medicacaoList);
+
+        // when
+        when(pesagemRepository.findById(pesagemEsperada.getId())).thenReturn(java.util.Optional.of(pesagemEsperada));
+        // then
+        assertThatThrownBy(() -> pesagemService_underTest.editaPesagem(
+                new PesagemRequestDTO(
+                        boi.getId(),
+                        null,
+                        pesagemEsperada.getDescricao(),
+                        pesagemEsperada.getData(),
+                        List.of(medicacaoStr)
+                ),
+                pesagemEsperada.getId()
+        )).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void naoDeveEditarPesagemDataNula(){
+        // given
+        Pesagem pesagemEsperada = gerarPesagemAleatoria();
+        String medicacaoStr = "medicacao";
+        Boi boi = gerarBoiAleatorio();
+        pesagemEsperada.setBoi(boi);
+        Medicacao medicacao = new Medicacao(medicacaoStr);
+        List<Medicacao> medicacaoList = new ArrayList<Medicacao>();
+        medicacaoList.add(medicacao);
+        pesagemEsperada.setMedicacoes(medicacaoList);
+
+        // when
+        when(pesagemRepository.findById(pesagemEsperada.getId())).thenReturn(java.util.Optional.of(pesagemEsperada));
+        // then
+        assertThatThrownBy(() -> pesagemService_underTest.editaPesagem(
+                new PesagemRequestDTO(
+                        boi.getId(),
+                        pesagemEsperada.getPeso(),
+                        pesagemEsperada.getDescricao(),
+                        null,
+                        List.of(medicacaoStr)
+                ),
+                pesagemEsperada.getId()
+        )).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void deveEditarPesagemDescricaoNula(){
+        // given
+        Pesagem pesagemEsperada = gerarPesagemAleatoria();
+        String medicacaoStr = "medicacao";
+        Boi boi = gerarBoiAleatorio();
+        pesagemEsperada.setBoi(boi);
+        Medicacao medicacao = new Medicacao(medicacaoStr);
+        List<Medicacao> medicacaoList = new ArrayList<Medicacao>();
+        medicacaoList.add(medicacao);
+        pesagemEsperada.setMedicacoes(medicacaoList);
+
+        // when
+        when(pesagemRepository.findById(pesagemEsperada.getId())).thenReturn(java.util.Optional.of(pesagemEsperada));
+        ArgumentCaptor<Pesagem> pesagemArgumentCaptor = ArgumentCaptor.forClass(Pesagem.class);
+        Pesagem response = pesagemService_underTest.editaPesagem(
+                new PesagemRequestDTO(
+                        boi.getId(),
+                        pesagemEsperada.getPeso(),
+                        null,
+                        pesagemEsperada.getData(),
+                        List.of(medicacaoStr)
+                ),
+                pesagemEsperada.getId()
+        );
+
+        // then
+        verify(pesagemRepository).save(pesagemArgumentCaptor.capture());
+        assertThat(pesagemArgumentCaptor.getValue().getDescricao()).isEqualTo("");
+        assertThat(response.getDescricao()).isEqualTo("");
+    }
+
+    @Test
+    void deveEditarPesagemMedicacoesVazias(){
+        // given
+        Pesagem pesagemEsperada = gerarPesagemAleatoria();
+        String medicacaoStr = "medicacao";
+        Boi boi = gerarBoiAleatorio();
+        pesagemEsperada.setBoi(boi);
+        Medicacao medicacao = new Medicacao(medicacaoStr);
+        List<Medicacao> medicacaoList = new ArrayList<Medicacao>();
+        medicacaoList.add(medicacao);
+        pesagemEsperada.setMedicacoes(medicacaoList);
+
+        // when
+        when(pesagemRepository.findById(pesagemEsperada.getId())).thenReturn(java.util.Optional.of(pesagemEsperada));
+        ArgumentCaptor<Pesagem> pesagemArgumentCaptor = ArgumentCaptor.forClass(Pesagem.class);
+        Pesagem response = pesagemService_underTest.editaPesagem(
+                new PesagemRequestDTO(
+                        boi.getId(),
+                        pesagemEsperada.getPeso(),
+                        pesagemEsperada.getDescricao(),
+                        pesagemEsperada.getData(),
+                        new ArrayList<String>()
+                ),
+                pesagemEsperada.getId()
+        );
+
+        // then
+        verify(pesagemRepository).save(pesagemArgumentCaptor.capture());
+        assertThat(pesagemArgumentCaptor.getValue().getMedicacoes()).isEqualTo(new ArrayList<Medicacao>());
+        assertThat(response.getMedicacoes()).isEqualTo(new ArrayList<Medicacao>());
+    }
+
+    @Test
+    void deveDeletarPesagemIdValido(){
+        // given
+        Pesagem pesagemEsperada = gerarPesagemAleatoria();
+        // when
+        when(pesagemRepository.findById(pesagemEsperada.getId())).thenReturn(java.util.Optional.of(pesagemEsperada));
+        ArgumentCaptor<Pesagem> pesagemArgumentCaptor = ArgumentCaptor.forClass(Pesagem.class);
+        Pesagem response = pesagemService_underTest.deletaPesagem(pesagemEsperada.getId());
+
+        // then
+        verify(pesagemRepository).delete(pesagemEsperada);
+        assertThat(response).isEqualTo(pesagemEsperada);
+    }
+
+    @Test
+    void naoDeveDeletarPesagemIdNulo(){
+        // given
+        Pesagem pesagemEsperada = gerarPesagemAleatoria();
+        // when
+
+        // then
+        assertThatThrownBy(() -> pesagemService_underTest.deletaPesagem(null)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void naoDeveDeletarPesagemInexistente(){
+        // given
+        Pesagem pesagemEsperada = gerarPesagemAleatoria();
+        // when
+        when(pesagemRepository.findById(pesagemEsperada.getId())).thenReturn(java.util.Optional.empty());
+
+        // then
+        assertThatThrownBy(() -> pesagemService_underTest.deletaPesagem(pesagemEsperada.getId())).isInstanceOf(javax.persistence.EntityNotFoundException.class);
+    }
+
+
+
 }

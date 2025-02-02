@@ -11,4 +11,8 @@ public interface PesagemService {
     List<Pesagem> getPesagemByBoiId(Long boiId);
 
     Pesagem cadastraPesagem(PesagemRequestDTO pesagemRequestDTO);
+
+    Pesagem deletaPesagem(Long id);
+
+    Pesagem editaPesagem(PesagemRequestDTO pesagemRequestDTO, Long pesagemId);
 }

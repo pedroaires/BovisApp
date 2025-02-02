@@ -6,10 +6,7 @@ import bovisApp.firstApp.model.Pesagem;
 import bovisApp.firstApp.service.PesagemService;
 import bovisApp.firstApp.service.PesagemServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +37,18 @@ public class PesagemAPIController {
     @PostMapping(value = "/cadastraPesagem")
     public PesagemResponseDTO cadastraPesagem(PesagemRequestDTO pesagemRequestDTO){
         PesagemResponseDTO pesagemResponseDTO = new PesagemResponseDTO(pesagemService.cadastraPesagem(pesagemRequestDTO));
+        return pesagemResponseDTO;
+    }
+
+    @PutMapping(value = "/editaPesagem")
+    public PesagemResponseDTO editaPesagem(PesagemRequestDTO pesagemRequestDTO, Long pesagemId){
+        PesagemResponseDTO pesagemResponseDTO = new PesagemResponseDTO(pesagemService.editaPesagem(pesagemRequestDTO, pesagemId));
+        return pesagemResponseDTO;
+    }
+
+    @DeleteMapping(value = "/deletaPesagem")
+    public PesagemResponseDTO deletaPesagem(Long id){
+        PesagemResponseDTO pesagemResponseDTO = new PesagemResponseDTO(pesagemService.deletaPesagem(id));
         return pesagemResponseDTO;
     }
 }

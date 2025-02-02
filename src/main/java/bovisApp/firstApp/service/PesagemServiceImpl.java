@@ -8,6 +8,7 @@ import bovisApp.firstApp.repository.PesagemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -54,6 +55,39 @@ public class PesagemServiceImpl implements PesagemService{
         pesagemRepository.save(pesagem);
         return pesagem;
     }
+    @Override
+    public Pesagem editaPesagem(PesagemRequestDTO pesagemRequestDTO, Long pesagemId) {
+        if (pesagemId == null) {
+            throw new IllegalArgumentException("Id da pesagem não pode ser nulo");
+        }
+        Pesagem pesagem = pesagemRepository.findById(pesagemId).orElseThrow(() -> new EntityNotFoundException("Pesagem não encontrada"));
+        Double peso = Optional.ofNullable(pesagemRequestDTO.getPeso()).orElseThrow(() -> new IllegalArgumentException("Peso não pode ser nulo"));
+        Date data = Optional.ofNullable(pesagemRequestDTO.getData()).orElseThrow(() -> new IllegalArgumentException("Data da pesagem não pode ser nula"));
+        String descricao = Optional.ofNullable(pesagemRequestDTO.getDescricao()).orElse("");
+        Long boiId = Optional.ofNullable(pesagemRequestDTO.getBoiId()).orElseThrow(() -> new IllegalArgumentException("Id do boi não pode ser nulo"));
+        List<String> medicacoesStr = Optional.ofNullable(pesagemRequestDTO.getMedicacoes()).orElse(null);
+        List<Medicacao> medicacoes = medicacoesStr.stream().map(medicacaoService::getOrCreateMedicacao).collect(Collectors.toList());
+
+        Boi boi = boiService.getBoiById(boiId);
+        pesagem.setData(data);
+        pesagem.setPeso(peso);
+        pesagem.setDescricao(descricao);
+        pesagem.setMedicacoes(medicacoes);
+        pesagem.setBoi(boi);
+        pesagemRepository.save(pesagem);
+        return pesagem;
+    }
+
+    @Override
+    public Pesagem deletaPesagem(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id da pesagem não pode ser nulo");
+        }
+        Pesagem pesagem = pesagemRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Pesagem não encontrada"));
+        pesagemRepository.delete(pesagem);
+        return pesagem;
+    }
+
 
 
 }
