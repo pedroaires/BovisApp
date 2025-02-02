@@ -140,8 +140,12 @@ public class PesagemServiceImplTest {
 
         // then
         verify(pesagemRepository).save(pesagemArgumentCaptor.capture());
-        assertThat(pesagemArgumentCaptor.getValue()).isEqualTo(pesagemEsperada);
-        assertThat(response).isEqualTo(pesagemEsperada);
+        assertThat(pesagemArgumentCaptor.getValue()).isEqualTo(response);
+        assertThat(response.getDescricao()).isEqualTo(pesagemEsperada.getDescricao());
+        assertThat(response.getData()).isEqualTo(pesagemEsperada.getData());
+        assertThat(response.getPeso()).isEqualTo(pesagemEsperada.getPeso());
+        assertThat(response.getMedicacoes()).isEqualTo(pesagemEsperada.getMedicacoes());
+        assertThat(response.getBoi()).isEqualTo(pesagemEsperada.getBoi());
     }
 
     @Test
