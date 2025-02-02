@@ -3,6 +3,7 @@ package bovisApp.firstApp.model;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Pesagem {
@@ -24,6 +25,14 @@ public class Pesagem {
 
 
     public Pesagem(Date data, Double peso, String descricao, List<Medicacao> medicacoes) {
+        this.data = data;
+        this.peso = peso;
+        this.descricao = descricao;
+        this.medicacoes = medicacoes;
+    }
+
+    public Pesagem(Boi boi, Date data, Double peso, String descricao, List<Medicacao> medicacoes) {
+        this.boi = boi;
         this.data = data;
         this.peso = peso;
         this.descricao = descricao;
@@ -72,5 +81,25 @@ public class Pesagem {
 
     public Long getId() {
         return id;
+    }
+
+    public void setBoi(Boi boi) {
+        this.boi = boi;
+    }
+    public Boi getBoi() {
+        return boi;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pesagem pesagem = (Pesagem) o;
+        return Objects.equals(id, pesagem.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
